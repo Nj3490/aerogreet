@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /install.php
+Disallow: /config.php
+Disallow: /seed_airports.sql
+Disallow: /schema.sql
+Disallow: /index%20(1).html
+
+Sitemap: https://aerogreetindia.com/sitemap.xml
