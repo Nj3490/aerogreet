@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>My Bookings — Aero Greet India</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#D4AF37;--gd:#9a7a30;--gp:rgba(212,175,55,.1);--gb:rgba(212,175,55,.2);--d1:#080C10;--d2:#0D1520;--d3:#131E2D;--d4:#1A2840;--sl:#8FA0B8;--li:#EEF2F7;--tr:.25s ease}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--d1);color:var(--li);min-height:100vh}
+/* NAV */
+.nav{background:var(--d2);border-bottom:1px solid rgba(255,255,255,.05);padding:0 2rem;display:flex;align-items:center;gap:1rem;height:56px}
+.nav-logo{color:var(--g);font-size:1rem;font-weight:700;display:flex;align-items:center;gap:6px;text-decoration:none}
+.nav-links{display:flex;gap:1.5rem;margin-left:auto}
+.nav-link{font-size:.82rem;color:var(--sl);cursor:pointer;text-decoration:none;transition:color .2s}
+.nav-link:hover,.nav-link.on{color:var(--g)}
+.nav-user{font-size:.8rem;color:var(--sl);white-space:nowrap}
+/* MAIN LAYOUT */
+.app{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
+/* SCREENS */
+.screen{display:none}.screen.on{display:block}
+/* AUTH SCREENS */
+.auth-wrap{max-width:420px;margin:3rem auto}
+.acard{background:var(--d3);border:1px solid var(--gb);border-radius:16px;padding:2.25rem}
+.acard h2{font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:.35rem}
+.acard p{font-size:.82rem;color:var(--sl);margin-bottom:1.5rem}
+.fg{margin-bottom:.85rem}
+.fg label{display:block;font-size:.68rem;font-weight:700;color:var(--sl);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.fg input{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--gb);border-radius:8px;padding:11px 13px;color:#fff;font-size:.9rem;font-family:inherit;outline:none;transition:border-color .2s}
+.fg input:focus{border-color:var(--g)}
+.btn-p{width:100%;background:linear-gradient(135deg,var(--g),var(--gd));color:var(--d1);padding:12px;border-radius:9px;font-weight:700;font-size:.9rem;border:none;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(212,175,55,.3)}
+.alt-link{text-align:center;font-size:.8rem;color:var(--sl);margin-top:1rem;cursor:pointer}
+.alt-link span{color:var(--g)}
+.err-box{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.28);color:#f87171;border-radius:7px;padding:9px 13px;font-size:.82rem;text-align:center;margin-bottom:.85rem;display:none}
+/* TRACK (no login) */
+.track-card{background:var(--d3);border:1px solid var(--gb);border-radius:16px;padding:2rem;max-width:500px;margin:0 auto}
+.track-card h2{font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.35rem}
+/* DASHBOARD */
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem;flex-wrap:wrap;gap:.75rem}
+.dash-header h1{font-size:1.4rem;font-weight:700;color:#fff}
+.dash-header p{font-size:.83rem;color:var(--sl);margin-top:2px}
+.bk-grid{display:grid;gap:1rem}
+/* BOOKING CARD */
+.bkc{background:var(--d3);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:1.25rem 1.5rem;display:grid;grid-template-columns:1fr auto;gap:.75rem;align-items:start;transition:var(--tr);cursor:pointer}
+.bkc:hover{border-color:var(--gb);transform:translateY(-2px)}
+.bkc-ref{font-size:.72rem;font-weight:700;color:var(--g);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.3rem}
+.bkc-apt{font-size:.97rem;font-weight:600;color:#fff;margin-bottom:.2rem}
+.bkc-svc{font-size:.78rem;color:var(--sl);margin-bottom:.6rem}
+.bkc-meta{display:flex;gap:.85rem;flex-wrap:wrap}
+.bkc-m{font-size:.74rem;color:var(--sl)}
+.bkc-m strong{color:var(--li)}
+.bkc-r{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:.5rem}
+.bkc-price{font-size:1rem;font-weight:700;color:#F0C040}
+.badge{display:inline-flex;padding:3px 8px;border-radius:20px;font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.b-pending{background:rgba(251,191,36,.13);color:#fbbf24;border:1px solid rgba(251,191,36,.3)}
+.b-confirmed{background:rgba(59,130,246,.13);color:#60a5fa;border:1px solid rgba(59,130,246,.3)}
+.b-paid{background:rgba(16,185,129,.13);color:#34d399;border:1px solid rgba(16,185,129,.3)}
+.b-completed{background:rgba(34,197,94,.13);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
+.b-cancelled{background:rgba(239,68,68,.13);color:#f87171;border:1px solid rgba(239,68,68,.3)}
+.b-transit{background:rgba(212,175,55,.12);color:var(--g);border:1px solid var(--gb);font-size:.6rem}
+/* EMPTY STATE */
+.empty{text-align:center;padding:3.5rem 1rem;color:var(--sl)}
+.empty .ei{font-size:3rem;margin-bottom:.75rem;opacity:.4}
+/* DETAIL */
+.detail-card{background:var(--d3);border:1px solid var(--gb);border-radius:14px;padding:1.5rem}
+.detail-back{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--sl);cursor:pointer;margin-bottom:1.25rem;transition:color .2s}
+.detail-back:hover{color:var(--g)}
+.detail-head{margin-bottom:1.25rem}
+.detail-ref{font-size:.72rem;font-weight:700;color:var(--g);letter-spacing:.06em;text-transform:uppercase;margin-bottom:.25rem}
+.detail-apt{font-size:1.2rem;font-weight:700;color:#fff;margin-bottom:.2rem}
+.detail-svc{font-size:.83rem;color:var(--sl)}
+.dg{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin-bottom:1rem}
+.dr{display:flex;flex-direction:column;gap:2px}
+.dl{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--sl)}
+.dv{font-size:.85rem;color:var(--li)}
+.transit-box{background:var(--gp);border:1px solid var(--gb);border-radius:9px;padding:1rem;margin:1rem 0}
+.transit-title{font-size:.68rem;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.75rem}
+/* PROFILE */
+.profile-card{background:var(--d3);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:1.5rem;max-width:480px;margin-bottom:1.25rem}
+.profile-card h3{font-size:.92rem;font-weight:600;color:#fff;margin-bottom:1.1rem}
+/* TABS */
+.tabs{display:flex;gap:.3rem;margin-bottom:1.25rem;border-bottom:1px solid rgba(255,255,255,.07);padding-bottom:.7rem}
+.tab{font-size:.83rem;font-weight:600;color:var(--sl);padding:.4rem .9rem;border-radius:7px;cursor:pointer;transition:var(--tr)}
+.tab.on{background:var(--gp);color:var(--g)}
+/* FILTER */
+.filter-row{display:flex;gap:.65rem;margin-bottom:1.1rem;flex-wrap:wrap;align-items:center}
+.filter-row input,.filter-row select{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:var(--li);padding:8px 11px;border-radius:7px;font-size:.8rem;font-family:inherit;outline:none}
+.filter-row input:focus{border-color:var(--gb)}
+/* TOAST */
+.toast{position:fixed;bottom:1.75rem;right:1.75rem;background:var(--d3);border:1px solid var(--gb);color:var(--li);padding:.8rem 1.1rem;border-radius:9px;font-size:.82rem;z-index:999;opacity:0;transform:translateY(8px);transition:.28s;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast.on{opacity:1;transform:translateY(0)}
+/* BTN */
+.btn-s{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--li);padding:8px 14px;border-radius:8px;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit;transition:var(--tr)}
+.btn-s:hover{background:var(--gp);border-color:var(--gb)}
+@media(max-width:600px){.dg{grid-template-columns:1fr}.bkc{grid-template-columns:1fr}.bkc-r{align-items:flex-start;flex-direction:row;gap:.6rem}}
+
+/* ============================================================
+   LIGHT / DARK THEME — inline override block
+   Dark = default (existing design). Light via [data-theme="light"]
+   ============================================================ */
+:root { --sb-bg: rgba(8,12,16,.97); }
+[data-theme="light"] {
+  --d:#ffffff; --d2:#f5f7fa; --d3:#edf0f4; --d4:#e4e8ee;
+  --sl:#4a5568; --li:#1a202c; --w:#111827;
+  --b2:rgba(0,0,0,.09); --br:rgba(212,175,55,.38);
+  --sb-bg:rgba(255,255,255,.97);
+}
+[data-theme="light"] body{background:#ffffff;color:#1a202c;cursor:auto}
+[data-theme="light"] #cursor,[data-theme="light"] #cursor-ring{display:none!important}
+[data-theme="light"] ::-webkit-scrollbar-track{background:#e5e7eb}
+[data-theme="light"] #nav.scrolled,[data-theme="light"] #navbar{background:rgba(255,255,255,.97)!important;border-bottom-color:rgba(0,0,0,.1);box-shadow:0 2px 20px rgba(0,0,0,.08)}
+[data-theme="light"] .nav-ul a{color:#374151}
+[data-theme="light"] .nav-ul a:hover{color:#111;background:rgba(0,0,0,.05)}
+[data-theme="light"] .hb span{background:#374151}
+[data-theme="light"] .mob{background:rgba(255,255,255,.99);border-bottom-color:rgba(0,0,0,.1)}
+[data-theme="light"] .mob a{color:#374151;border-bottom-color:rgba(0,0,0,.07)}
+[data-theme="light"] .hcard{background:#ffffff;border-color:rgba(212,175,55,.3);box-shadow:0 8px 40px rgba(0,0,0,.1)}
+[data-theme="light"] .bw-steps{background:#f9fafb}
+[data-theme="light"] .bw-title{color:#111827}
+[data-theme="light"] .bw-sub{color:#6b7280}
+[data-theme="light"] .sbox input{background:#ffffff;border-color:rgba(0,0,0,.18);color:#111}
+[data-theme="light"] .sbox input::placeholder{color:#9ca3af}
+[data-theme="light"] .sbox input:focus{border-color:var(--gl);background:#fffef5}
+[data-theme="light"] #sdrop{background:#ffffff;border-color:rgba(0,0,0,.12);box-shadow:0 12px 40px rgba(0,0,0,.18)}
+[data-theme="light"] .sdi{border-bottom-color:rgba(0,0,0,.06)}
+[data-theme="light"] .sdi:hover{background:rgba(212,175,55,.07)}
+[data-theme="light"] .sdi-city{color:#111827}
+[data-theme="light"] .sdi-name{color:#6b7280}
+[data-theme="light"] .sel-ap{background:rgba(212,175,55,.08);border-color:rgba(212,175,55,.35)}
+[data-theme="light"] .sel-ap-name{color:#111827}
+[data-theme="light"] .chip{background:#f3f4f6;border-color:rgba(0,0,0,.1);color:#374151}
+[data-theme="light"] .ft-toggle{background:#f3f4f6;border-color:rgba(0,0,0,.1)}
+[data-theme="light"] .ft-btn{color:#6b7280}
+[data-theme="light"] .pdbox,.price-display{background:rgba(212,175,55,.07);border-color:rgba(212,175,55,.3)}
+[data-theme="light"] .pdbox-label,[data-theme="light"] .pd-label{color:#6b7280}
+[data-theme="light"] .bw-fg label,.fg label{color:#374151}
+[data-theme="light"] .bw-fg input,.bw-fg select,.bw-fg textarea,
+[data-theme="light"] .fg input,.fg select,.fg textarea{background:#ffffff;border-color:rgba(0,0,0,.2);color:#111}
+[data-theme="light"] .bw-fg input::placeholder,.bw-fg textarea::placeholder,
+[data-theme="light"] .fg input::placeholder,.fg textarea::placeholder{color:#9ca3af}
+[data-theme="light"] .bw-fg select option,.fg select option{background:#fff;color:#111}
+[data-theme="light"] .price-bar{background:rgba(212,175,55,.08);border-color:rgba(212,175,55,.3)}
+[data-theme="light"] .pb-label,.bw-note,.pb-detail{color:#6b7280}
+[data-theme="light"] .faq-item{border-color:rgba(0,0,0,.1)}
+[data-theme="light"] .faq-q{color:#111827}
+[data-theme="light"] .faq-q:hover{background:rgba(212,175,55,.05)}
+[data-theme="light"] .faq-a{color:#4a5568}
+[data-theme="light"] .seo-b{background:#f9fafb;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .seo-b h3{color:#111827}
+[data-theme="light"] .seo-b p{color:#4a5568}
+[data-theme="light"] .bkcard{background:#ffffff;border-color:rgba(212,175,55,.3);box-shadow:0 4px 24px rgba(0,0,0,.08)}
+[data-theme="light"] .bkh{background:rgba(212,175,55,.07);border-bottom-color:rgba(212,175,55,.2)}
+[data-theme="light"] .bkh h3{color:#111827}
+[data-theme="light"] .bkh p{color:#6b7280}
+[data-theme="light"] .addon-item{background:#f9fafb;border-color:rgba(0,0,0,.1)}
+[data-theme="light"] .addon-item:hover{border-color:rgba(212,175,55,.4)}
+[data-theme="light"] .addon-item-name{color:#111827}
+[data-theme="light"] .addon-item-desc{color:#6b7280}
+[data-theme="light"] .pill{color:#6b7280}
+[data-theme="light"] .sl-it{background:#f9fafb;border-color:rgba(0,0,0,.08);color:#374151}
+[data-theme="light"] .svc-card{background:#f9fafb}
+[data-theme="light"] .svc-card:hover{background:#f3f4f6}
+[data-theme="light"] .svc-card h3{color:#111827}
+[data-theme="light"] .svc-card p{color:#4a5568}
+[data-theme="light"] .step-c{background:#f3f4f6;border-color:rgba(212,175,55,.3)}
+[data-theme="light"] .step h3{color:#111827}
+[data-theme="light"] .step p{color:#4a5568}
+[data-theme="light"] .tcard{background:#f9fafb;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .tcard:hover{border-color:rgba(212,175,55,.3);background:#f3f4f6}
+[data-theme="light"] .tbody{color:#4a5568}
+[data-theme="light"] .tname{color:#111827}
+[data-theme="light"] .sh2,.iblk h2{color:#111827!important}
+[data-theme="light"] .ssub,.iblk p{color:#4a5568!important}
+[data-theme="light"] .aa-tile{background:#f9fafb;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .aa-tile:hover{background:rgba(212,175,55,.08);border-color:rgba(212,175,55,.4)}
+[data-theme="light"] .aa-city{color:#111827}
+[data-theme="light"] .aa-state{color:#6b7280}
+[data-theme="light"] .ap-card{background:#f9fafb;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .ap-card:hover{background:rgba(212,175,55,.07);border-color:rgba(212,175,55,.4)}
+[data-theme="light"] .ap-city{color:#111827}
+[data-theme="light"] .apt-price-box{background:#f3f4f6;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .apt-price-box .pbl{color:#6b7280}
+[data-theme="light"] .ap-table-wrap{border-color:rgba(212,175,55,.25)}
+[data-theme="light"] .ap-tbl thead tr{background:rgba(212,175,55,.07)}
+[data-theme="light"] .ap-tbl td{border-bottom-color:rgba(0,0,0,.06);color:#374151}
+[data-theme="light"] .td-city{color:#111827}
+[data-theme="light"] .filter-bar{background:rgba(255,255,255,.98);border-bottom-color:rgba(0,0,0,.1)}
+[data-theme="light"] .srch-wrap input,[data-theme="light"] .aa-search input{background:#ffffff;border-color:rgba(0,0,0,.15);color:#111}
+[data-theme="light"] .ftab{background:#f3f4f6;border-color:rgba(0,0,0,.1);color:#6b7280}
+[data-theme="light"] .ftab:hover{background:rgba(212,175,55,.1);color:#111}
+[data-theme="light"] .cta,[data-theme="light"] .cta-band{background:linear-gradient(135deg,#f5f7fa,#edf0f4);border-color:rgba(212,175,55,.2)}
+[data-theme="light"] .cta h2,.cta-band h2{color:#111827}
+[data-theme="light"] .cta p,.cta-band p{color:#4a5568}
+[data-theme="light"] footer{background:#f5f7fa;border-top-color:rgba(0,0,0,.1)}
+[data-theme="light"] .fgrid{border-bottom-color:rgba(0,0,0,.07)}
+[data-theme="light"] .fbrand,.fcol h5,.fcol-title{color:#374151}
+[data-theme="light"] .fbot{color:#9ca3af}
+[data-theme="light"] .fcol ul li a{color:#6b7280}
+[data-theme="light"] .flinks a{color:#6b7280}
+[data-theme="light"] .page-hero{background:linear-gradient(160deg,#f5f7fa 0%,#edf0f4 100%);border-bottom-color:rgba(0,0,0,.1)}
+[data-theme="light"] .page-hero h1{color:#111827}
+[data-theme="light"] .page-hero p{color:#4a5568}
+[data-theme="light"] .marquee{background:#f3f4f6;border-color:rgba(0,0,0,.07)}
+[data-theme="light"] .mit{color:#6b7280}
+[data-theme="light"] .wpt{border-bottom-color:rgba(0,0,0,.07)}
+[data-theme="light"] .wpt-t{color:#111827}
+[data-theme="light"] .wpt-d{color:#4a5568}
+[data-theme="light"] .val-card{background:#f9fafb;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .val-card h3{color:#111827}
+[data-theme="light"] .val-card p{color:#4a5568}
+[data-theme="light"] .team-card{background:#f9fafb;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .team-name{color:#111827}
+[data-theme="light"] .tl-title{color:#111827}
+[data-theme="light"] .tl-text{color:#4a5568}
+[data-theme="light"] #sidebar-panel{background:rgba(255,255,255,.97);border-color:rgba(0,0,0,.12);box-shadow:-8px 0 40px rgba(0,0,0,.15)}
+[data-theme="light"] .sb-label{color:#6b7280}
+[data-theme="light"] .about-stat{background:#f3f4f6;border-color:rgba(0,0,0,.08)}
+[data-theme="light"] .about-stat-label{color:#6b7280}
+[data-theme="light"] .about-text p{color:#4a5568}
+
+/* ── Extended light-theme fixes ─────────────────────────────── */
+
+/* Verbose variable aliases (about/contact/policy pages use --dark etc.) */
+[data-theme="light"] {
+  --dark:   #ffffff;
+  --dark2:  #f5f7fa;
+  --dark3:  #edf0f4;
+  --dark4:  #e4e8ee;
+  --light:  #1a202c;
+  --white:  #111827;
+  --slate:  #4a5568;
+  --border: rgba(212,175,55,.38);
+  --border2: rgba(0,0,0,.09);
+}
+
+/* Fix always-dark navbar on airport pages and secondary pages */
+[data-theme="light"] #nav,
+[data-theme="light"] #navbar {
+  background: rgba(255,255,255,.97) !important;
+  border-bottom-color: rgba(212,175,55,.25) !important;
+  box-shadow: 0 2px 16px rgba(0,0,0,.07);
+}
+
+/* Secondary page nav elements */
+[data-theme="light"] .nav-logo-text { color: #111827; }
+[data-theme="light"] .nav-links a   { color: #374151; }
+[data-theme="light"] .nav-links a:hover { color: #111; background: rgba(0,0,0,.05); }
+[data-theme="light"] .hamburger span { background: #374151; }
+[data-theme="light"] .mobile-menu {
+  background: rgba(255,255,255,.99) !important;
+  border-bottom-color: rgba(0,0,0,.1);
+}
+[data-theme="light"] .mobile-menu a { color: #374151; border-bottom-color: rgba(0,0,0,.07); }
+
+/* Page hero on secondary pages — fix hardcoded dark gradient */
+[data-theme="light"] .page-hero {
+  background: linear-gradient(160deg,#f5f7fa 0%,#edf0f4 100%) !important;
+  border-bottom-color: rgba(0,0,0,.1);
+}
+
+/* Secondary-page section and body text */
+[data-theme="light"] .section-title { color: #111827 !important; }
+[data-theme="light"] .section-sub   { color: #4a5568 !important; }
+[data-theme="light"] .values-section { background: #f3f4f6; }
+[data-theme="light"] .about-stat-v  { color: #111827; }
+
+/* Contact / policy form labels */
+[data-theme="light"] .form-group label,
+[data-theme="light"] .lg label,
+[data-theme="light"] .contact-label { color: #374151; }
+[data-theme="light"] .form-group input,
+[data-theme="light"] .form-group select,
+[data-theme="light"] .form-group textarea {
+  background: #ffffff;
+  border-color: rgba(0,0,0,.2);
+  color: #111111;
+}
+[data-theme="light"] .form-group input::placeholder,
+[data-theme="light"] .form-group textarea::placeholder { color: #9ca3af; }
+
+/* Footer alternate class names */
+[data-theme="light"] .site-footer,
+[data-theme="light"] .footer { background: #f5f7fa !important; border-top-color: rgba(0,0,0,.1); }
+[data-theme="light"] .footer-col h5,
+[data-theme="light"] .footer-col-title { color: #374151; }
+[data-theme="light"] .footer-col ul li a,
+[data-theme="light"] .footer-links a,
+[data-theme="light"] .footer-col ul a { color: #6b7280; }
+[data-theme="light"] .footer-col ul li a:hover { color: var(--gl); }
+[data-theme="light"] .footer-bottom,
+[data-theme="light"] .footer-copy,
+[data-theme="light"] .f-copy,
+[data-theme="light"] .f-copy a { color: #9ca3af; }
+
+/* Fixed: pdbox-label and pd-label (was double-selector bug) */
+[data-theme="light"] .pdbox-label,
+[data-theme="light"] .pd-label    { color: #6b7280; }
+[data-theme="light"] .pdbox-note  { color: #9ca3af; }
+[data-theme="light"] .pd-breakdown { color: #9ca3af; }
+[data-theme="light"] .pd-na       { color: #9ca3af; }
+
+/* Booking widget step tabs */
+[data-theme="light"] .bw-step-tab         { color: #9ca3af; }
+[data-theme="light"] .bw-step-tab.active  { color: var(--gl); }
+[data-theme="light"] .bw-step-tab.done    { color: var(--gl); }
+
+/* Airport card sub-details */
+[data-theme="light"] .ap-name     { color: #9ca3af; }
+[data-theme="light"] .ap-dom-only { color: #9ca3af; }
+[data-theme="light"] .ap-iata     { color: var(--gl); }
+[data-theme="light"] .pbv         { color: #111827; font-weight: 700; }
+[data-theme="light"] .ap-book-btn { background: rgba(212,175,55,.1); color: #111827; border-color: rgba(212,175,55,.3); }
+[data-theme="light"] .td-nm       { color: #6b7280; }
+[data-theme="light"] .td-code     { color: var(--gl); }
+[data-theme="light"] .td-p        { color: #111827; font-weight: 700; }
+
+/* Why-us floating card (hardcoded dark background) */
+[data-theme="light"] .why-float {
+  background: rgba(255,255,255,.95);
+  border-color: rgba(212,175,55,.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,.1);
+}
+[data-theme="light"] .wf-title { color: #111827; }
+[data-theme="light"] .wf-sub   { color: #6b7280; }
+
+/* Trust/proof row (below hero — on white bg in light theme) */
+[data-theme="light"] .hp-stats,
+[data-theme="light"] .trust-strip { background: #f5f7fa; border-color: rgba(0,0,0,.07); }
+[data-theme="light"] .hp-stat-v   { color: #111827; }
+[data-theme="light"] .hp-stat-l   { color: #6b7280; }
+
+/* Breadcrumb */
+[data-theme="light"] .bc   { color: #6b7280; }
+[data-theme="light"] .bc a { color: var(--gl); }
+
+/* Info block (international info / iblk) */
+[data-theme="light"] .iblk   { background: #f9fafb; border-color: rgba(0,0,0,.08); }
+
+/* Policy page / terms / privacy content */
+[data-theme="light"] .policy-nav { background: #f5f7fa; border-color: rgba(0,0,0,.08); }
+[data-theme="light"] .policy-nav a { color: #374151; }
+[data-theme="light"] .policy-nav a.active { color: var(--gl); }
+[data-theme="light"] .policy-section h2,
+[data-theme="light"] .policy-section h3 { color: #111827; }
+[data-theme="light"] .policy-section p,
+[data-theme="light"] .policy-section li  { color: #4a5568; }
+
+/* Contact page contact cards */
+[data-theme="light"] .contact-card  { background: #f9fafb; border-color: rgba(0,0,0,.08); }
+[data-theme="light"] .contact-card h3,
+[data-theme="light"] .contact-label-h { color: #111827; }
+
+/* Blog page */
+[data-theme="light"] .blog-card   { background: #f9fafb; border-color: rgba(0,0,0,.08); }
+[data-theme="light"] .blog-card h2,
+[data-theme="light"] .blog-card h3 { color: #111827; }
+[data-theme="light"] .blog-card p  { color: #4a5568; }
+
+/* Sidebar admin elements */
+[data-theme="light"] .sidebar-label { color: #9ca3af; }
+[data-theme="light"] .sidebar-item  { color: #374151; }
+[data-theme="light"] .sidebar-item:hover { background: rgba(212,175,55,.08); }
+
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+<script>/* theme init — apply before render to avoid FOUC */
+(function(){
+  var t=localStorage.getItem('themePreference')||'dark';
+  document.documentElement.setAttribute('data-theme',t);
+})();
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="../">✈ Aero Greet India</a>
+  <div class="nav-links">
+    <span class="nav-link on" onclick="showTab('bookings')" id="nl-bookings">My Bookings</span>
+    <span class="nav-link" onclick="showTab('profile')" id="nl-profile" style="display:none">Profile</span>
+    <span class="nav-link" onclick="showTab('track')">Track Booking</span>
+    <a class="nav-link" href="../" style="color:var(--sl);text-decoration:none">← Back to Site</a>
+    <span class="nav-link" id="nav-auth" onclick="showAuth()">Sign In</span>
+    <span class="nav-link" id="nav-out" onclick="logout()" style="display:none">Sign Out</span>
+  </div>
+  <div class="nav-user" id="nav-user" style="display:none"></div>
+</nav>
+
+<div class="app">
+
+  <!-- BOOKING TRACK (no login required) -->
+  <div class="screen" id="sc-track">
+    <div class="track-card">
+      <h2>Track Your Booking</h2>
+      <p style="font-size:.82rem;color:var(--sl);margin:.3rem 0 1.25rem">Enter your booking reference and email to check status.</p>
+      <div id="track-err" class="err-box"></div>
+      <div class="fg"><label>Booking Reference</label><input id="tr-ref" placeholder="TB-2025-0001" autocomplete="off"></div>
+      <div class="fg"><label>Email Address</label><input id="tr-email" type="email" placeholder="your@email.com"></div>
+      <button class="btn-p" onclick="trackBooking()">Track Booking →</button>
+      <div style="text-align:center;margin-top:1rem;font-size:.8rem;color:var(--sl)">Have an account? <span style="color:var(--g);cursor:pointer" onclick="showAuth()">Sign in</span> to see all your bookings.</div>
+    </div>
+    <div id="track-result" style="margin-top:1.5rem"></div>
+  </div>
+
+  <!-- AUTH: LOGIN -->
+  <div class="screen" id="sc-login">
+    <div class="auth-wrap">
+      <div class="acard">
+        <h2>Sign In</h2>
+        <p>Access your booking history and manage your bookings.</p>
+        <div id="ln-err" class="err-box"></div>
+        <div class="fg"><label>Email</label><input type="email" id="ln-email" placeholder="your@email.com" autocomplete="email"></div>
+        <div class="fg"><label>Password</label><input type="password" id="ln-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
+        <button class="btn-p" onclick="doLogin()">Sign In →</button>
+        <div class="alt-link" onclick="showScreen('sc-register')">Don't have an account? <span>Register</span></div>
+        <div class="alt-link" onclick="showScreen('sc-track')" style="margin-top:.5rem">Just track a booking? <span>No login needed →</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AUTH: REGISTER -->
+  <div class="screen" id="sc-register">
+    <div class="auth-wrap">
+      <div class="acard">
+        <h2>Create Account</h2>
+        <p>Register to easily track and manage all your Aero Greet bookings.</p>
+        <div id="rg-err" class="err-box"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+          <div class="fg"><label>First Name</label><input id="rg-fn" placeholder="Rahul"></div>
+          <div class="fg"><label>Last Name</label><input id="rg-ln" placeholder="Sharma"></div>
+        </div>
+        <div class="fg"><label>Email</label><input type="email" id="rg-email" placeholder="rahul@email.com"></div>
+        <div class="fg"><label>Phone</label><input type="tel" id="rg-phone" placeholder="+91 9876543210"></div>
+        <div class="fg"><label>Password</label><input type="password" id="rg-pass" placeholder="Min 8 characters"></div>
+        <button class="btn-p" onclick="doRegister()">Create Account →</button>
+        <div class="alt-link" onclick="showScreen('sc-login')">Already have an account? <span>Sign In</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="screen" id="sc-dashboard">
+    <div class="tabs">
+      <div class="tab on" onclick="showTab('bookings')" id="tab-bookings">My Bookings</div>
+      <div class="tab" onclick="showTab('profile')" id="tab-profile">Profile</div>
+    </div>
+
+    <!-- BOOKINGS TAB -->
+    <div id="tab-bookings-body">
+      <div class="dash-header">
+        <div><h1>My Bookings</h1><p id="dash-sub">Loading…</p></div>
+        <a href="../" class="btn-s">+ New Booking</a>
+      </div>
+      <div class="filter-row">
+        <select id="filter-status" onchange="renderBookings()">
+          <option value="">All Status</option>
+          <option>Pending</option><option>Confirmed</option><option>Paid</option><option>Completed</option><option>Cancelled</option>
+        </select>
+        <input type="text" id="filter-q" placeholder="Search airport, service…" oninput="renderBookings()">
+      </div>
+      <div id="bk-list"></div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile-body" style="display:none">
+      <div style="margin-bottom:1.25rem"><h1 style="font-size:1.3rem;font-weight:700;color:#fff">Profile</h1></div>
+      <div class="profile-card">
+        <h3>Personal Information</h3>
+        <div id="pr-err" class="err-box"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:.65rem">
+          <div class="fg"><label>First Name</label><input id="pr-fn"></div>
+          <div class="fg"><label>Last Name</label><input id="pr-ln"></div>
+        </div>
+        <div class="fg"><label>Email (cannot change)</label><input id="pr-email" readonly style="opacity:.5;cursor:not-allowed"></div>
+        <div class="fg"><label>Phone</label><input id="pr-phone"></div>
+        <button class="btn-p" onclick="saveProfile()">Save Changes</button>
+      </div>
+      <div class="profile-card">
+        <h3>Change Password</h3>
+        <div id="pw-err" class="err-box"></div>
+        <div class="fg"><label>New Password (min 8 chars)</label><input type="password" id="pw-new"></div>
+        <button class="btn-p" onclick="changePassword()">Set New Password</button>
+      </div>
+    </div>
+
+    <!-- BOOKING DETAIL -->
+    <div id="bk-detail" style="display:none">
+      <div class="detail-back" onclick="closeDetail()">← Back to My Bookings</div>
+      <div class="detail-card" id="bk-detail-card"></div>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<div class="toast" id="toast"></div>
+
+<script>
+const API='../api/?r=';
+let TOK=localStorage.getItem('ag_usr')||'';
+let myBookings=[];
+let currentUser=null;
+
+// ── FETCH ────────────────────────────────────────
+async function req(r,m='GET',b=null){
+  const opts={method:m,headers:{'Content-Type':'application/json','Authorization':'Bearer '+TOK}};
+  if(b) opts.body=JSON.stringify(b);
+  try{const res=await fetch(API+r,opts);if(res.status===401){TOK='';localStorage.removeItem('ag_usr');showAuthScreen();return null;}return await res.json();}
+  catch(e){return null;}
+}
+const get=r=>req(r);
+const post=(r,b)=>req(r,'POST',b);
+
+// ── SCREENS ──────────────────────────────────────
+function showScreen(n){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));id(n).classList.add('on');}
+function showAuth(){showScreen('sc-login');}
+function showAuthScreen(){
+  id('nav-auth').style.display='';id('nav-out').style.display='none';
+  id('nav-user').style.display='none';id('nl-profile').style.display='none';
+  showScreen('sc-login');
+}
+
+function showTab(tab) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  id('tab-bookings-body').style.display='none';
+  id('tab-profile-body').style.display='none';
+  id('bk-detail').style.display='none';
+  if(tab==='bookings'){
+    id('tab-bookings').classList.add('on');
+    id('tab-bookings-body').style.display='block';
+    renderBookings();
+  }
+  if(tab==='profile'){
+    id('tab-profile').classList.add('on');
+    id('tab-profile-body').style.display='block';
+    if(currentUser){id('pr-fn').value=currentUser.first_name||'';id('pr-ln').value=currentUser.last_name||'';id('pr-email').value=currentUser.email||'';id('pr-phone').value=currentUser.phone||'';}
+  }
+}
+
+// ── AUTH ─────────────────────────────────────────
+async function doLogin(){
+  const email=id('ln-email').value.trim(), pass=id('ln-pass').value;
+  const err=id('ln-err'); err.style.display='none';
+  if(!email||!pass){err.textContent='Email and password required';err.style.display='block';return;}
+  const r=await req('auth/login','POST',{email,password:pass});
+  if(!r?.ok){err.textContent=r?.error||'Login failed';err.style.display='block';return;}
+  TOK=r.token; localStorage.setItem('ag_usr',TOK); currentUser=r.user;
+  afterLogin();
+}
+
+async function doRegister(){
+  const fn=id('rg-fn').value.trim(),ln=id('rg-ln').value.trim(),email=id('rg-email').value.trim(),phone=id('rg-phone').value.trim(),pass=id('rg-pass').value;
+  const err=id('rg-err'); err.style.display='none';
+  if(!fn||!email||!pass){err.textContent='Name, email and password required';err.style.display='block';return;}
+  const r=await req('auth/register','POST',{first_name:fn,last_name:ln,email,phone,password:pass});
+  if(!r?.ok){err.textContent=r?.error||'Registration failed';err.style.display='block';return;}
+  TOK=r.token; localStorage.setItem('ag_usr',TOK); currentUser=r.user;
+  afterLogin();
+}
+
+function afterLogin(){
+  id('nav-auth').style.display='none'; id('nav-out').style.display='';
+  id('nl-profile').style.display=''; 
+  if(currentUser) id('nav-user').textContent='Hi, '+(currentUser.first_name||currentUser.email);
+  id('nav-user').style.display='';
+  showScreen('sc-dashboard'); loadMyBookings();
+}
+
+async function logout(){
+  await post('auth/logout',{}); TOK=''; localStorage.removeItem('ag_usr'); currentUser=null; myBookings=[];
+  showAuthScreen();
+}
+
+// ── BOOKING TRACK ────────────────────────────────
+async function trackBooking(){
+  const ref=id('tr-ref').value.trim(), email=id('tr-email').value.trim();
+  const err=id('track-err'); err.style.display='none';
+  id('track-result').innerHTML='';
+  if(!ref||!email){err.textContent='Please enter both your booking reference and email address.';err.style.display='block';return;}
+  // Show loading
+  id('track-result').innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--sl);font-size:.85rem">Searching&#8230;</div>';
+  const r=await get('track?ref='+encodeURIComponent(ref)+'&email='+encodeURIComponent(email));
+  id('track-result').innerHTML='';
+  if(!r){err.textContent='Could not connect to server. Please try again.';err.style.display='block';return;}
+  if(!r.ok){
+    err.textContent=r.error||'No booking found with those details. Please check your reference number and email.';
+    err.style.display='block';
+    return;
+  }
+  id('track-result').innerHTML=renderDetailCard(r.booking);
+}
+
+// ── MY BOOKINGS ───────────────────────────────────
+async function loadMyBookings(){
+  const d=await get('user/bookings'); if(!d?.ok) return;
+  myBookings=d.bookings||[];
+  id('dash-sub').textContent=myBookings.length+' booking'+(myBookings.length!==1?'s':'');
+  renderBookings();
+}
+
+function renderBookings(){
+  const q=(id('filter-q')?.value||'').toLowerCase();
+  const st=id('filter-status')?.value||'';
+  const filtered=myBookings.filter(b=>{
+    if(st&&b.status!==st) return false;
+    if(q&&!(b.airport_name||'').toLowerCase().includes(q)&&!(b.service_type||'').toLowerCase().includes(q)&&!(b.ref||'').toLowerCase().includes(q)) return false;
+    return true;
+  });
+  if(!filtered.length){id('bk-list').innerHTML=`<div class="empty"><div class="ei">✈</div><div style="font-size:.95rem;font-weight:600;color:var(--li);margin-bottom:.4rem">${myBookings.length?'No matching bookings':'No bookings yet'}</div><div style="font-size:.83rem">Book your first airport meet & greet service</div><br><a href="../" style="color:var(--g);font-size:.85rem">Browse Airports →</a></div>`;return;}
+  id('bk-list').innerHTML=filtered.map(b=>`
+    <div class="bkc" onclick="viewDetail('${b.ref}')">
+      <div>
+        <div class="bkc-ref">${b.ref}${b.is_transit?' <span class="badge b-transit">Transit</span>':''}</div>
+        <div class="bkc-apt">${(b.airport_name||'—').split('(')[0].trim()}</div>
+        <div class="bkc-svc">${b.service_type||'—'} · ${b.flight_type||'—'}</div>
+        <div class="bkc-meta">
+          <div class="bkc-m">${b.travel_date?`<strong>${b.travel_date}</strong>`:''}</div>
+          <div class="bkc-m">${b.passengers?`<strong>${b.passengers}</strong> pax`:''}</div>
+          <div class="bkc-m">Booked <strong>${fmtShort(b.created_at)}</strong></div>
+        </div>
+      </div>
+      <div class="bkc-r">
+        <span class="badge b-${(b.status||'').toLowerCase()}">${b.status}</span>
+        <div class="bkc-price">${b.price||'—'}</div>
+      </div>
+    </div>`
+  ).join('');
+}
+
+async function viewDetail(ref){
+  const d=await get(`user/bookings?ref=${ref}`); if(!d?.ok) return;
+  id('bk-detail-card').innerHTML=renderDetailCard(d.booking);
+  id('tab-bookings-body').style.display='none';
+  id('bk-detail').style.display='block';
+}
+
+function renderDetailCard(b){
+  const transit=b.is_transit?`
+    <div class="transit-box">
+      <div class="transit-title">🔄 Transit Flight Details</div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem;margin-top:.25rem">✈ Arriving Flight</div>
+      <div class="dg" style="margin-bottom:.75rem">
+        <div class="dr"><div class="dl">Arriving Flight No.</div><div class="dv" style="font-weight:600">${b.arr_flight_no||'—'}</div></div>
+        <div class="dr"><div class="dl">From</div><div class="dv">${b.arr_from||'—'}</div></div>
+        <div class="dr"><div class="dl">Arrival Date</div><div class="dv">${b.arr_date||'—'}</div></div>
+        <div class="dr"><div class="dl">Arrival Time</div><div class="dv">${b.arr_time||'—'}</div></div>
+      </div>
+      <div style="font-size:.7rem;font-weight:700;color:var(--g);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem">🔄 Connecting / Departing Flight</div>
+      <div class="dg">
+        <div class="dr"><div class="dl">Departure Flight No.</div><div class="dv" style="font-weight:600">${b.dep_flight_no||'—'}</div></div>
+        <div class="dr"><div class="dl">To</div><div class="dv">${b.dep_to||'—'}</div></div>
+        <div class="dr"><div class="dl">Departure Date</div><div class="dv">${b.dep_date||'—'}</div></div>
+        <div class="dr"><div class="dl">Departure Time</div><div class="dv">${b.dep_time||'—'}</div></div>
+      </div>
+    </div>`:''
+  ;
+  return `
+    <div class="detail-head">
+      <div class="detail-ref">${b.ref}${b.is_transit?' <span class="badge b-transit">Transit</span>':''}</div>
+      <div class="detail-apt">${(b.airport_name||'—').split('(')[0].trim()}</div>
+      <div class="detail-svc">${b.service_type||'—'}</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:1rem;flex-wrap:wrap">
+      <span class="badge b-${(b.status||'').toLowerCase()}">${b.status}</span>
+      <span style="font-size:.9rem;font-weight:700;color:#F0C040">${b.price||'—'}</span>
+      ${b.email_sent?'<span style="font-size:.76rem;color:#4ade80">✅ Confirmation sent</span>':''}
+    </div>
+    <div class="dg">
+      <div class="dr"><div class="dl">Name</div><div class="dv">${b.first_name||''} ${b.last_name||''}</div></div>
+      <div class="dr"><div class="dl">Phone</div><div class="dv">${b.phone||'—'}</div></div>
+      <div class="dr"><div class="dl">Email</div><div class="dv">${b.email||'—'}</div></div>
+      <div class="dr"><div class="dl">Passengers</div><div class="dv">${b.passengers||'—'}</div></div>
+      <div class="dr"><div class="dl">Service</div><div class="dv">${b.service_type||'—'}</div></div>
+      <div class="dr"><div class="dl">Flight Type</div><div class="dv">${b.flight_type||'—'}</div></div>
+      <div class="dr"><div class="dl">Flight No.</div><div class="dv">${b.flight_no||'—'}</div></div>
+      <div class="dr"><div class="dl">Travel Date</div><div class="dv">${b.travel_date||'—'}</div></div>
+      <div class="dr"><div class="dl">Flight Time</div><div class="dv">${b.flight_time||'—'}</div></div>
+      <div class="dr"><div class="dl">Add-ons</div><div class="dv">${b.addons||'None'}</div></div>
+    </div>
+    ${b.special_req?`<div class="dr" style="margin-bottom:.85rem"><div class="dl">Special Requirements</div><div class="dv" style="background:rgba(255,255,255,.03);padding:.65rem;border-radius:7px;margin-top:3px">${b.special_req}</div></div>`:''}
+    ${transit}
+    <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,.06)">
+      ${['Pending','Confirmed'].includes(b.status)?`<div style="font-size:.8rem;color:var(--sl);margin-bottom:.75rem">Need help? Contact us and quote <strong style="color:var(--g)">${b.ref}</strong></div>`:''}
+      <div style="display:flex;gap:.65rem;flex-wrap:wrap">
+        <a href="https://wa.me/919536896071?text=Hi, my booking ref is ${b.ref}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#25D366;color:#fff;padding:9px 16px;border-radius:8px;text-decoration:none;font-size:.8rem;font-weight:600">💬 WhatsApp Support</a>
+        <a href="mailto:sales@aerogreetindia.com?subject=Booking ${b.ref}" class="btn-s" style="text-decoration:none">📧 Email Support</a>
+        <a href="../" class="btn-s" style="text-decoration:none">✈ Book Again</a>
+      </div>
+    </div>
+  `;
+}
+
+function closeDetail(){
+  id('bk-detail').style.display='none';
+  id('tab-bookings-body').style.display='block';
+}
+
+// ── PROFILE ──────────────────────────────────────
+async function saveProfile(){
+  const r=await req('user/profile','PUT',{first_name:id('pr-fn').value.trim(),last_name:id('pr-ln').value.trim(),phone:id('pr-phone').value.trim()});
+  if(r?.ok){toast('Profile updated ✅');if(currentUser){currentUser.first_name=id('pr-fn').value.trim();id('nav-user').textContent='Hi, '+currentUser.first_name;}}
+  else{id('pr-err').textContent=r?.error||'Error';id('pr-err').style.display='block';}
+}
+async function changePassword(){
+  const pw=id('pw-new').value;
+  if(pw.length<8){id('pw-err').textContent='Min 8 characters';id('pw-err').style.display='block';return;}
+  const r=await req('user/profile','PUT',{password:pw});
+  if(r?.ok){toast('Password changed ✅');id('pw-new').value='';}
+  else{id('pw-err').textContent=r?.error||'Error';id('pw-err').style.display='block';}
+}
+
+// ── HELPERS ──────────────────────────────────────
+const id=n=>document.getElementById(n);
+function fmt(s){if(!s)return'—';try{return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}catch{return s;}}
+function fmtShort(s){if(!s)return'—';try{return new Date(s).toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}catch{return s;}}
+function toast(msg){const el=id('toast');el.textContent=msg;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),3000);}
+
+// ── BOOT ─────────────────────────────────────────
+(async()=>{
+  // Check ?track=REF&email=EMAIL query params
+  const params=new URLSearchParams(location.search);
+  if(params.get('track')){id('tr-ref').value=params.get('track')||'';id('tr-email').value=params.get('email')||'';showScreen('sc-track');return;}
+
+  if(!TOK){showScreen('sc-track');return;}
+  const d=await get('auth/me');
+  if(!d?.ok||d.type!=='user'){TOK='';localStorage.removeItem('ag_usr');showScreen('sc-track');return;}
+  currentUser=d.user;
+  id('nav-auth').style.display='none'; id('nav-out').style.display='';
+  id('nl-profile').style.display='';
+  id('nav-user').textContent='Hi, '+(currentUser.first_name||currentUser.email);
+  id('nav-user').style.display='';
+  showScreen('sc-dashboard');
+  loadMyBookings();
+})();
+</script>
+</body>
+</html>
